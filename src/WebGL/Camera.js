@@ -15,9 +15,9 @@ export default class Camera {
 			near: 1,
 			far: 100,
 			position: {
-				x: 6,
-				y: 4,
-				z: 8,
+				x: 0,
+				y: 0,
+				z: 4,
 			},
 			target: {
 				x: 0,
