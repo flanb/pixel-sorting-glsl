@@ -16,6 +16,7 @@ export default class Renderer {
 		this.instance = new WebGLRenderer({
 			canvas: this.canvas,
 			powerPreference: 'high-performance',
+			antialias: false,
 		})
 		// this.instance.outputColorSpace = SRGBColorSpace
 		// this.instance.toneMapping = CineonToneMapping
