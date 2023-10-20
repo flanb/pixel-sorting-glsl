@@ -27,7 +27,7 @@ export default class Camera {
 		}
 
 		this.setInstance()
-		this.setControls()
+		// this.setControls()
 		this.applySavedSettings()
 		if (this.debug.active) this.setDebug()
 	}
@@ -53,10 +53,12 @@ export default class Camera {
 			this.instance.position.set(this.options.position.x, this.options.position.y, this.options.position.z)
 		}
 
-		if (cameraTarget) {
-			this.controls.target.set(cameraTarget.x, cameraTarget.y, cameraTarget.z)
-		} else {
-			this.controls.target.set(this.options.target.x, this.options.target.y, this.options.target.z)
+		if (this.controls) {
+			if (cameraTarget) {
+				this.controls.target.set(cameraTarget.x, cameraTarget.y, cameraTarget.z)
+			} else {
+				this.controls.target.set(this.options.target.x, this.options.target.y, this.options.target.z)
+			}
 		}
 	}
 
@@ -93,14 +95,15 @@ export default class Camera {
 			})
 			.on('click', this.resetControls.bind(this))
 
-		this.debugFolder
-			.addBinding(this.controls, 'enabled', {
-				label: 'Orbit Controls',
-			})
-			.on('change', this.resetControls.bind(this))
+		if (this.controls)
+			this.debugFolder
+				.addBinding(this.controls, 'enabled', {
+					label: 'Orbit Controls',
+				})
+				.on('change', this.resetControls.bind(this))
 	}
 
 	update() {
-		this.controls.update()
+		if (this.controls) this.controls.update()
 	}
 }
