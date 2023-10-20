@@ -8,6 +8,7 @@ export default class Plane {
 		this.experience = new Experience()
 		this.scene = this.experience.scene
 		this.debug = this.experience.debug
+		this.time = this.experience.time
 
 		this.position = _position
 
@@ -24,6 +25,10 @@ export default class Plane {
 		this.material = new ShaderMaterial({
 			fragmentShader,
 			vertexShader,
+			uniforms: {
+				uTime: { value: 0 },
+				uTexture: { value: this.experience.resources.items.testTexture },
+			},
 		})
 	}
 
@@ -33,5 +38,8 @@ export default class Plane {
 		this.mesh.name = 'plane'
 		this.scene.add(this.mesh)
 	}
-	update() {}
+
+	update() {
+		this.material.uniforms.uTime.value = this.time.elapsed
+	}
 }
