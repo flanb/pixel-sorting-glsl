@@ -57,7 +57,6 @@ export default class Plane {
 
 			const context = canvas.getContext('2d')
 			context.scale(1, -1)
-			console.log(image)
 			context.drawImage(image, 0, 0, size, -size)
 
 			return context.getImageData(0, 0, size, size).data
@@ -70,33 +69,12 @@ export default class Plane {
 		this.gpuCompute = new GPUComputationRenderer(gpuComputeTextureSize, gpuComputeTextureSize, this.renderer)
 		const textureSorted = this.gpuCompute.createTexture()
 
-		const rowColors = new Array(gpuComputeTextureSize).fill(0).map((n, i) => ({
-			r: (Math.sin(i) * 0.124 + 1) / 2,
-			g: (Math.sin(i + 0.234) * 0.563 + 1) / 2,
-			b: (Math.sin(i + 0.988) * 0.348 + 1) / 2,
-		}))
-
-		if (initialTextureData) {
-			textureSorted.image.data.set(initialTextureData)
-		} else {
-			for (let i = 0, channels = 4; i < textureSorted.image.data.length; i += channels) {
-				const pixelIndex = Math.floor(i / channels)
-				const y = Math.floor(pixelIndex / gpuComputeTextureSize)
-
-				const color = rowColors[(pixelIndex + y * 15838) % rowColors.length]
-
-				textureSorted.image.data[i + 0] = color.r
-				textureSorted.image.data[i + 1] = color.g
-				textureSorted.image.data[i + 2] = color.b
-				textureSorted.image.data[i + 3] = 1
-			}
-		}
+		textureSorted.image.data.set(initialTextureData)
 
 		this.variableSorted = this.gpuCompute.addVariable('uTexture', fragmentSimulation, textureSorted)
 		this.gpuCompute.setVariableDependencies(this.variableSorted, [this.variableSorted])
 
 		const gpuComputeCompileError = this.gpuCompute.init()
-		console.log(gpuComputeCompileError)
 
 		this.variableSorted.material.uniforms.uIteration = { value: 0 }
 
