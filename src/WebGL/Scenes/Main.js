@@ -1,8 +1,5 @@
 import Experience from "../Experience.js";
-import Environment from "components/Environment.js";
-import Floor from "components/Floor.js";
-import Fox from "components/Fox/Fox.js";
-import Cube from "components/Cube/Cube.js";
+import Plane from "components/Plane/index.js";
 
 export default class Main {
   constructor() {
@@ -13,14 +10,11 @@ export default class Main {
     // Wait for resources
     this.resources.on("ready", () => {
       // Setup
-      this.floor = new Floor();
-      this.fox = new Fox();
-      this.cube = new Cube();
-      this.environment = new Environment();
+      this.plane = new Plane();
     });
   }
 
   update() {
-    if (this.fox) this.fox.update();
+   if (this.plane) this.plane.update();
   }
 }
