@@ -29,7 +29,7 @@ export default class Camera {
 		this.setInstance()
 		// this.setControls()
 		this.applySavedSettings()
-		if (this.debug.active) this.setDebug()
+		// if (this.debug.active) this.setDebug()
 	}
 
 	setInstance() {

@@ -21,7 +21,7 @@ export default class SceneManager {
 			this.sceneName = 'main'
 		}
 
-		if (this.debug.active) this.setDebug()
+		// if (this.debug.active) this.setDebug()
 
 		// create scene
 		return new this.scenes[this.sceneName]()

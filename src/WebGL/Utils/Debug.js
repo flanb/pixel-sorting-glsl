@@ -6,7 +6,8 @@ import Experience from 'webgl/Experience'
 export default class Debug {
 	constructor() {
 		this.experience = new Experience()
-		this.active = window.location.hash === '#debug'
+		// this.active = window.location.hash === '#debug'
+		this.active = true
 
 		if (this.active) {
 			this.ui = new Pane({ title: '⚙️ Debug' })
