@@ -64,7 +64,7 @@ export default class Plane {
 		}
 
 		const initialTextureData = new Float32Array(
-			getImageData(this.experience.resources.items.testTexture.image, gpuComputeTextureSize),
+			getImageData(this.experience.resources.items.testTexture.image, gpuComputeTextureSize)
 		).map((n) => n / 255)
 
 		this.gpuCompute = new GPUComputationRenderer(gpuComputeTextureSize, gpuComputeTextureSize, this.renderer)
