@@ -30,7 +30,7 @@ export default class Plane {
 			fragmentShader,
 			vertexShader,
 			uniforms: {
-				uTexture: { value: this.experience.resources.items.testTexture },
+				uTexture: { value: this.experience.resources.items.testTexture3 },
 			},
 		})
 	}
@@ -49,7 +49,7 @@ export default class Plane {
 			textureSorted.dispose()
 		}
 
-		this.experience.resources.items.testTexture.image.src
+		this.experience.resources.items.testTexture3.image.src
 		const getImageData = (image, size = 1) => {
 			const canvas = document.createElement('canvas')
 			canvas.height = size
@@ -63,7 +63,7 @@ export default class Plane {
 		}
 
 		const initialTextureData = new Float32Array(
-			getImageData(this.experience.resources.items.testTexture.image, gpuComputeTextureSize),
+			getImageData(this.experience.resources.items.testTexture3.image, gpuComputeTextureSize)
 		).map((n) => n / 255)
 
 		this.gpuCompute = new GPUComputationRenderer(gpuComputeTextureSize, gpuComputeTextureSize, this.renderer)
