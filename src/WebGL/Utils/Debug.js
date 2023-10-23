@@ -1,5 +1,6 @@
 import { Pane } from 'tweakpane'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
+import * as TweakpanePluginMedia from 'tweakpane-plugin-media'
 import Stats from 'stats.js'
 import Experience from 'webgl/Experience'
 
@@ -32,6 +33,7 @@ export default class Debug {
 
 	setPlugins() {
 		this.ui.registerPlugin(EssentialsPlugin)
+		this.ui.registerPlugin(TweakpanePluginMedia)
 	}
 
 	setImportExportButtons() {
