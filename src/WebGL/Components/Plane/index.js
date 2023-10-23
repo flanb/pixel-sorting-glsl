@@ -84,6 +84,8 @@ export default class Plane {
 	}
 
 	update() {
+		if (this.variableSorted.material.uniforms.uIteration.value === 2048) return
+
 		this.gpuCompute.compute()
 
 		const texture = this.gpuCompute.getCurrentRenderTarget(this.variableSorted).texture
