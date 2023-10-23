@@ -9,9 +9,10 @@ float gscale (vec3 c) {
 
 void main() {
 	vec2 coord = gl_FragCoord.xy;
-	bool checkPrevious = mod(coord.x + uIteration, 2.0) < 1.0; // Check whether to compare with the previous frame
+	vec2 direction = vec2(0., 1.); // Direction for comparing with adjacent pixel
+	float coordAxis = direction.x == 0. ? coord.y : coord.x;
+	bool checkPrevious = mod(coordAxis + uIteration, 2.0) < 1.0; // Check whether to compare with the previous frame
 
-	vec2 direction = vec2(-1.0, 0.); // Direction for comparing with adjacent pixel
 	vec2 pixelOffset = direction / resolution.xy; // Offset for sampling adjacent pixel
 
 	vec2 uv = coord / resolution.xy;
