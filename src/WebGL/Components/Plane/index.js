@@ -4,6 +4,7 @@ import vertexShader from './vertexShader.vert'
 import fragmentSimulation from './fragmentSimulation.frag'
 import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
 import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js'
+import getImageData from 'utils/getImageData.js'
 
 export default class Plane {
 	constructor(_position = new Vector3(0, 0, 0)) {
@@ -12,13 +13,24 @@ export default class Plane {
 		this.debug = this.experience.debug
 		this.time = this.experience.time
 		this.renderer = this.experience.renderer.instance
+		this.debug = this.experience.debug
 
 		this.position = _position
+
+		this.PARAMS = {
+			gpuComputeTextureSize: 512,
+		}
 
 		this.setGeometry()
 		this.setMaterial()
 		this.setMesh()
-		this.initGPUCompute()
+
+		const initialTextureData = new Float32Array(
+			getImageData(this.experience.resources.items.testTexture.image, this.PARAMS.gpuComputeTextureSize),
+		).map((n) => n / 255)
+		this.initGPUCompute(initialTextureData)
+
+		if (this.debug.active) this.setDebug()
 	}
 
 	setGeometry() {
@@ -30,7 +42,7 @@ export default class Plane {
 			fragmentShader,
 			vertexShader,
 			uniforms: {
-				uTexture: { value: this.experience.resources.items.testTexture },
+				uTexture: { value: null },
 			},
 		})
 	}
@@ -42,36 +54,22 @@ export default class Plane {
 		this.scene.add(this.mesh)
 	}
 
-	initGPUCompute(dispose = false) {
-		const gpuComputeTextureSize = 512
-		if (dispose) {
+	initGPUCompute(initialTextureData, disposePrevious = false) {
+		if (disposePrevious) {
 			this.variableSorted.renderTargets.forEach((rt) => rt.dispose())
-			textureSorted.dispose()
+			this.textureSorted.dispose()
 		}
 
-		this.experience.resources.items.testTexture.image.src
-		const getImageData = (image, size = 1) => {
-			const canvas = document.createElement('canvas')
-			canvas.height = size
-			canvas.width = size
+		this.gpuCompute = new GPUComputationRenderer(
+			this.PARAMS.gpuComputeTextureSize,
+			this.PARAMS.gpuComputeTextureSize,
+			this.renderer,
+		)
+		this.textureSorted = this.gpuCompute.createTexture()
 
-			const context = canvas.getContext('2d')
-			context.scale(1, -1)
-			context.drawImage(image, 0, 0, size, -size)
+		this.textureSorted.image.data.set(initialTextureData)
 
-			return context.getImageData(0, 0, size, size).data
-		}
-
-		const initialTextureData = new Float32Array(
-			getImageData(this.experience.resources.items.testTexture.image, gpuComputeTextureSize),
-		).map((n) => n / 255)
-
-		this.gpuCompute = new GPUComputationRenderer(gpuComputeTextureSize, gpuComputeTextureSize, this.renderer)
-		const textureSorted = this.gpuCompute.createTexture()
-
-		textureSorted.image.data.set(initialTextureData)
-
-		this.variableSorted = this.gpuCompute.addVariable('uTexture', fragmentSimulation, textureSorted)
+		this.variableSorted = this.gpuCompute.addVariable('uTexture', fragmentSimulation, this.textureSorted)
 		this.gpuCompute.setVariableDependencies(this.variableSorted, [this.variableSorted])
 
 		const gpuComputeCompileError = this.gpuCompute.init()
@@ -81,6 +79,23 @@ export default class Plane {
 		if (gpuComputeCompileError !== null) {
 			console.error(gpuComputeCompileError)
 		}
+	}
+
+	setDebug() {
+		this.debug.ui
+			.addBinding({ image: this.experience.resources.items.testTexture.image }, 'image', {
+				label: 'Image',
+				view: 'image',
+				height: 100,
+				objectFit: 'cover',
+				showMonitor: true,
+			})
+			.on('change', (ev) => {
+				const initialTextureData = new Float32Array(getImageData(ev.value, this.PARAMS.gpuComputeTextureSize)).map(
+					(n) => n / 255,
+				)
+				this.initGPUCompute(initialTextureData, true)
+			})
 	}
 
 	update() {
