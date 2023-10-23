@@ -1,4 +1,4 @@
-#define THRESHOLD 0.2 // Threshold value for determining color change
+#define THRESHOLD 0.08 // Threshold value for determining color change
 
 uniform float uIteration; // A uniform variable for iteration control
 
