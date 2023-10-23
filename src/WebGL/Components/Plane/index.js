@@ -18,7 +18,8 @@ export default class Plane {
 		this.position = _position
 
 		this.PARAMS = {
-			gpuComputeTextureSize: 512,
+			size: 4096,
+			threshold: 0.5,
 		}
 
 		this.setGeometry()
@@ -26,7 +27,7 @@ export default class Plane {
 		this.setMesh()
 
 		const initialTextureData = new Float32Array(
-			getImageData(this.experience.resources.items.testTexture.image, this.PARAMS.gpuComputeTextureSize),
+			getImageData(this.experience.resources.items.testTexture3.image, this.PARAMS.size)
 		).map((n) => n / 255)
 		this.initGPUCompute(initialTextureData)
 
@@ -60,11 +61,7 @@ export default class Plane {
 			this.textureSorted.dispose()
 		}
 
-		this.gpuCompute = new GPUComputationRenderer(
-			this.PARAMS.gpuComputeTextureSize,
-			this.PARAMS.gpuComputeTextureSize,
-			this.renderer,
-		)
+		this.gpuCompute = new GPUComputationRenderer(this.PARAMS.size, this.PARAMS.size, this.renderer)
 		this.textureSorted = this.gpuCompute.createTexture()
 
 		this.textureSorted.image.data.set(initialTextureData)
@@ -75,6 +72,7 @@ export default class Plane {
 		const gpuComputeCompileError = this.gpuCompute.init()
 
 		this.variableSorted.material.uniforms.uIteration = { value: 0 }
+		this.variableSorted.material.uniforms.uThreshold = { value: 0.5 }
 
 		if (gpuComputeCompileError !== null) {
 			console.error(gpuComputeCompileError)
@@ -83,7 +81,7 @@ export default class Plane {
 
 	setDebug() {
 		this.debug.ui
-			.addBinding({ image: this.experience.resources.items.testTexture.image }, 'image', {
+			.addBinding({ image: this.experience.resources.items.testTexture3.image }, 'image', {
 				label: 'Image',
 				view: 'image',
 				height: 100,
@@ -91,21 +89,27 @@ export default class Plane {
 				showMonitor: true,
 			})
 			.on('change', (ev) => {
-				const initialTextureData = new Float32Array(getImageData(ev.value, this.PARAMS.gpuComputeTextureSize)).map(
-					(n) => n / 255,
-				)
+				const initialTextureData = new Float32Array(getImageData(ev.value, this.PARAMS.size)).map((n) => n / 255)
 				this.initGPUCompute(initialTextureData, true)
 			})
+		this.debug.ui.addBinding(this.PARAMS, 'size', { label: 'Size', min: 1, max: 4096, step: 1 }).on('change', () => {
+			const initialTextureData = new Float32Array(
+				getImageData(this.experience.resources.items.testTexture3.image, this.PARAMS.size)
+			).map((n) => n / 255)
+			this.initGPUCompute(initialTextureData, true)
+		})
+		this.debug.ui.addBinding(this.PARAMS, 'threshold', { label: 'Threshold', min: 0, max: 1, step: 0.01 })
 	}
 
 	update() {
-		if (this.variableSorted.material.uniforms.uIteration.value === 2048) return
+		if (this.variableSorted.material.uniforms.uIteration.value === this.PARAMS.size) return
 
 		this.gpuCompute.compute()
 
 		const texture = this.gpuCompute.getCurrentRenderTarget(this.variableSorted).texture
 		this.material.uniforms.uTexture.value = texture
 
+		this.variableSorted.material.uniforms.uThreshold.value = this.PARAMS.threshold
 		this.variableSorted.material.uniforms.uIteration.value += 1
 	}
 }

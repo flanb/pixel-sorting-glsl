@@ -1,6 +1,7 @@
 #define THRESHOLD 0.08 // Threshold value for determining color change
 
 uniform float uIteration; // A uniform variable for iteration control
+uniform float uThreshold; // A uniform variable for threshold control
 
 // Function to calculate grayscale from an RGB color
 float gscale (vec3 c) {
@@ -23,14 +24,14 @@ void main() {
 	float gReference = gscale(referenceTexture.rgb);
 
 	if (checkPrevious) {
-		// If the grayscale value of the current pixel is above the threshold and the grayscale value of the adjacent pixel is higher,
-		if (gCurrent > THRESHOLD && gReference > gCurrent) {
+		// If the grayscale value of the current pixel is above the uThreshold and the grayscale value of the adjacent pixel is higher,
+		if (gCurrent > uThreshold && gReference > gCurrent) {
 			gl_FragColor = referenceTexture; // Set the current pixel color to the adjacent pixel's color
 			return;
 		}
 	} else {
-		// If the grayscale value of the adjacent pixel is above the threshold and the grayscale value of the current pixel is higher or equal,
-		if (gReference > THRESHOLD && gCurrent >= gReference) {
+		// If the grayscale value of the adjacent pixel is above the uThreshold and the grayscale value of the current pixel is higher or equal,
+		if (gReference > uThreshold && gCurrent >= gReference) {
 			gl_FragColor = referenceTexture; // Set the current pixel color to the adjacent pixel's color
 			return;
 		}
