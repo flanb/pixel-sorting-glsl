@@ -7,35 +7,32 @@ import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer
 import getImageData from 'utils/getImageData.js'
 
 export default class Plane {
-	constructor(_position = new Vector3(0, 0, 0)) {
+	constructor(position = new Vector3(0, 0, 0)) {
 		this.experience = new Experience()
 		this.scene = this.experience.scene
 		this.debug = this.experience.debug
-		this.time = this.experience.time
 		this.renderer = this.experience.renderer.instance
 		this.debug = this.experience.debug
-
-		this.position = _position
 
 		this.PARAMS = {
 			size: 4096,
 			threshold: 0.5,
+			position,
+			image: this.experience.resources.items.testTexture3.image,
+			lastUpdate: 0,
 		}
 
 		this.setGeometry()
 		this.setMaterial()
 		this.setMesh()
 
-		const initialTextureData = new Float32Array(
-			getImageData(this.experience.resources.items.testTexture3.image, this.PARAMS.size)
-		).map((n) => n / 255)
-		this.initGPUCompute(initialTextureData)
+		this.initGPUCompute(this.PARAMS.image, this.PARAMS.size)
 
 		if (this.debug.active) this.setDebug()
 	}
 
 	setGeometry() {
-		this.geometry = new PlaneGeometry(2, 2, 1)
+		this.geometry = new PlaneGeometry(2, 2)
 	}
 
 	setMaterial() {
@@ -50,16 +47,18 @@ export default class Plane {
 
 	setMesh() {
 		this.mesh = new Mesh(this.geometry, this.material)
-		this.mesh.position.copy(this.position)
+		this.mesh.position.copy(this.PARAMS.position)
 		this.mesh.name = 'plane'
 		this.scene.add(this.mesh)
 	}
 
-	initGPUCompute(initialTextureData, disposePrevious = false) {
+	initGPUCompute(image, size, disposePrevious = false) {
 		if (disposePrevious) {
 			this.variableSorted.renderTargets.forEach((rt) => rt.dispose())
 			this.textureSorted.dispose()
 		}
+
+		const initialTextureData = new Float32Array(getImageData(image, size)).map((n) => n / 255)
 
 		this.gpuCompute = new GPUComputationRenderer(this.PARAMS.size, this.PARAMS.size, this.renderer)
 		this.textureSorted = this.gpuCompute.createTexture()
@@ -72,7 +71,7 @@ export default class Plane {
 		const gpuComputeCompileError = this.gpuCompute.init()
 
 		this.variableSorted.material.uniforms.uIteration = { value: 0 }
-		this.variableSorted.material.uniforms.uThreshold = { value: 0.5 }
+		this.variableSorted.material.uniforms.uThreshold = { value: this.PARAMS.threshold }
 
 		if (gpuComputeCompileError !== null) {
 			console.error(gpuComputeCompileError)
@@ -81,33 +80,35 @@ export default class Plane {
 
 	setDebug() {
 		this.debug.ui
-			.addBinding({ image: this.experience.resources.items.testTexture3.image }, 'image', {
+			.addBinding(this.PARAMS, 'image', {
 				label: 'Image',
 				view: 'image',
 				height: 100,
 				objectFit: 'cover',
-				showMonitor: true,
 			})
-			.on('change', (ev) => {
-				const initialTextureData = new Float32Array(getImageData(ev.value, this.PARAMS.size)).map((n) => n / 255)
-				this.initGPUCompute(initialTextureData, true)
+			.on('change', () => {
+				this.initGPUCompute(this.PARAMS.image, this.PARAMS.size, true)
 			})
-		this.debug.ui.addBinding(this.PARAMS, 'size', { label: 'Size', min: 1, max: 4096, step: 1 }).on('change', () => {
-			const initialTextureData = new Float32Array(
-				getImageData(this.experience.resources.items.testTexture3.image, this.PARAMS.size)
-			).map((n) => n / 255)
-			this.initGPUCompute(initialTextureData, true)
-		})
-		this.debug.ui.addBinding(this.PARAMS, 'threshold', { label: 'Threshold', min: 0, max: 1, step: 0.01 })
+		this.debug.ui
+			.addBinding(this.PARAMS, 'size', { label: 'Size', min: 1, max: 4096, step: 2 })
+			.on('change', (event) => {
+				if (!event.last) return
+				this.PARAMS.size = event.value
+				this.initGPUCompute(this.PARAMS.image, this.PARAMS.size, true)
+			})
+		this.debug.ui
+			.addBinding(this.PARAMS, 'threshold', { label: 'Threshold', min: 0, max: 1, step: 0.01 })
+			.on('change', () => {
+				this.PARAMS.lastUpdate = this.variableSorted.material.uniforms.uIteration.value
+			})
 	}
 
 	update() {
-		if (this.variableSorted.material.uniforms.uIteration.value === this.PARAMS.size) return
+		if (this.variableSorted.material.uniforms.uIteration.value === this.PARAMS.size + this.PARAMS.lastUpdate) return
 
 		this.gpuCompute.compute()
 
-		const texture = this.gpuCompute.getCurrentRenderTarget(this.variableSorted).texture
-		this.material.uniforms.uTexture.value = texture
+		this.material.uniforms.uTexture.value = this.gpuCompute.getCurrentRenderTarget(this.variableSorted).texture
 
 		this.variableSorted.material.uniforms.uThreshold.value = this.PARAMS.threshold
 		this.variableSorted.material.uniforms.uIteration.value += 1
