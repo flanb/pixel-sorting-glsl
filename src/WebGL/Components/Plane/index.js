@@ -6,6 +6,8 @@ import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
 import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js'
 import getImageData from 'utils/getImageData.js'
 
+import SeedManager from './seed'
+
 export default class Plane {
 	constructor(position = new Vector3(0, 0, 0)) {
 		this.experience = new Experience()
