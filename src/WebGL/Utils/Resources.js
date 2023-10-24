@@ -1,5 +1,5 @@
 import EventEmitter from './EventEmitter.js'
-import { CubeTextureLoader, TextureLoader } from 'three'
+import { CubeTextureLoader, TextureLoader, Texture, CubeTexture, Object3D } from 'three'
 import Experience from 'webgl/Experience.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
@@ -13,6 +13,9 @@ export default class Resources extends EventEmitter {
 
 		this.sources = sources
 
+		/**
+		 * @type {{[name: string]: Texture | CubeTexture | Object3D}}
+		 */
 		this.items = {}
 		this.toLoad = this.sources.length
 		this.loaded = 0
