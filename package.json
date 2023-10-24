@@ -13,10 +13,12 @@
 		"three": "^0.157.0"
 	},
 	"devDependencies": {
-		"tweakpane-plugin-media": "github:flanb/tweakpane-plugin-media",
+		"@tweakpane/core": "^2.0.1",
 		"@tweakpane/plugin-essentials": "0.2.0",
+		"@types/three": "^0.157.2",
 		"stats.js": "^0.17.0",
 		"tweakpane": "^4.0.1",
+		"tweakpane-plugin-media": "github:flanb/tweakpane-plugin-media",
 		"vite": "^4.5.0",
 		"vite-plugin-glslify": "^2.0.2"
 	}
