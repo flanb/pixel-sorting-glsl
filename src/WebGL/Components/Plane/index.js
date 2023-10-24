@@ -6,6 +6,8 @@ import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
 import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js'
 import getImageData from 'utils/getImageData.js'
 
+import SeedManager from './seed'
+
 export default class Plane {
 	constructor(position = new Vector3(0, 0, 0)) {
 		this.experience = new Experience()
@@ -16,7 +18,7 @@ export default class Plane {
 
 		this.PARAMS = {
 			size: 4096,
-			threshold: 0.5,
+			threshold: 0.2,
 			position,
 			image: this.experience.resources.items.testTexture3.image,
 			lastUpdate: 0,
@@ -29,6 +31,9 @@ export default class Plane {
 		this.initGPUCompute(this.PARAMS.image, this.PARAMS.size)
 
 		if (this.debug.active) this.setDebug()
+
+		this.seedManager = new SeedManager()
+		console.log(this.seedManager.getSeed())
 	}
 
 	setGeometry() {
@@ -97,14 +102,19 @@ export default class Plane {
 				this.initGPUCompute(this.PARAMS.image, this.PARAMS.size, true)
 			})
 		this.debug.ui
-			.addBinding(this.PARAMS, 'threshold', { label: 'Threshold', min: 0, max: 1, step: 0.01 })
+			.addBinding(this.PARAMS, 'threshold', {
+				label: 'Threshold',
+				min: 0,
+				max: 1,
+				step: 0.01,
+			})
 			.on('change', () => {
 				this.PARAMS.lastUpdate = this.variableSorted.material.uniforms.uIteration.value
 			})
 	}
 
 	update() {
-		if (this.variableSorted.material.uniforms.uIteration.value === this.PARAMS.size + this.PARAMS.lastUpdate) return
+		if (this.variableSorted.material.uniforms.uIteration.value >= this.PARAMS.size + this.PARAMS.lastUpdate) return
 
 		this.gpuCompute.compute()
 
