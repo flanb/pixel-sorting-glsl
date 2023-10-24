@@ -6,8 +6,6 @@ import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
 import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js'
 import getImageData from 'utils/getImageData.js'
 
-import SeedManager from './seed'
-
 export default class Plane {
 	constructor(position = new Vector3(0, 0, 0)) {
 		this.experience = new Experience()
@@ -37,7 +35,7 @@ export default class Plane {
 	}
 
 	setGeometry() {
-		this.geometry = new PlaneGeometry(2, 2)
+		this.geometry = new PlaneGeometry(3, 2)
 	}
 
 	setMaterial() {
@@ -46,6 +44,7 @@ export default class Plane {
 			vertexShader,
 			uniforms: {
 				uTexture: { value: null },
+				uTextureRatio: { value: this.PARAMS.image.width / this.PARAMS.image.height },
 			},
 		})
 	}
@@ -93,6 +92,7 @@ export default class Plane {
 			})
 			.on('change', () => {
 				this.initGPUCompute(this.PARAMS.image, this.PARAMS.size, true)
+				this.material.uniforms.uTextureRatio.value = this.PARAMS.image.width / this.PARAMS.image.height
 			})
 		this.debug.ui
 			.addBinding(this.PARAMS, 'size', { label: 'Size', min: 1, max: 4096, step: 2 })
