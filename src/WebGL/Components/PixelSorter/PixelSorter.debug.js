@@ -44,5 +44,7 @@ export default function initDebug() {
 		.on('change', () => {
 			state.lastUpdate = state.variableSorted.material.uniforms.uIteration.value
 		})
-	debug.ui.addBinding(PARAMS, 'hue', { min: 0, max: 1, step: 0.01 })
+	debug.ui.addBinding(PARAMS, 'hue', { min: 0, max: 1, step: 0.01 }).on('change', () => {
+		state.material.uniforms.uHue.value = PARAMS.hue
+	})
 }

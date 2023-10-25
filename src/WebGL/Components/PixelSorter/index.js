@@ -10,7 +10,6 @@ export default class PixelSorter {
 	constructor(position = new Vector3(0, 0, 0)) {
 		this.experience = new Experience()
 		this.scene = this.experience.scene
-		this.renderer = this.experience.renderer.instance
 		this.seedManager = this.experience.seedManager
 
 		this.position = position
@@ -57,12 +56,10 @@ export default class PixelSorter {
 		state.gpuCompute.compute()
 		const { uTexture, uHue } = state.material.uniforms
 		uTexture.value = state.gpuCompute.getCurrentRenderTarget(state.variableSorted).texture
-		uHue.value = PARAMS.hue
 
 		const { uThreshold, uDirection, uIteration } = state.variableSorted.material.uniforms
 		uThreshold.value = PARAMS.threshold
 		uDirection.value = PARAMS.direction
 		uIteration.value += 1
-		console.log(uIteration)
 	}
 }
