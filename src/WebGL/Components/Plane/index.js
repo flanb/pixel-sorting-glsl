@@ -39,7 +39,7 @@ export default class Plane {
 	}
 
 	setGeometry() {
-		this.geometry = new PlaneGeometry(2, 2)
+		this.geometry = new PlaneGeometry(3, 2)
 	}
 
 	setMaterial() {
@@ -48,6 +48,7 @@ export default class Plane {
 			vertexShader,
 			uniforms: {
 				uTexture: { value: null },
+				uTextureRatio: { value: this.PARAMS.image.width / this.PARAMS.image.height },
 			},
 		})
 	}
@@ -97,6 +98,7 @@ export default class Plane {
 			})
 			.on('change', () => {
 				this.initGPUCompute(this.PARAMS.image, this.PARAMS.size, true)
+				this.material.uniforms.uTextureRatio.value = this.PARAMS.image.width / this.PARAMS.image.height
 			})
 		this.debug.ui
 			.addBinding(this.PARAMS, 'size', { label: 'Size', min: 1, max: 4096, step: 2 })
