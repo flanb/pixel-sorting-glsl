@@ -1,5 +1,5 @@
 import Experience from '../Experience.js'
-import Plane from 'components/Plane/index.js'
+import PixelSorter from 'components/PixelSorter'
 
 export default class Main {
 	constructor() {
@@ -10,11 +10,11 @@ export default class Main {
 		// Wait for resources
 		this.resources.on('ready', () => {
 			// Setup
-			this.plane = new Plane()
+			this.pixelSorter = new PixelSorter()
 		})
 	}
 
 	update() {
-		if (this.plane) this.plane.update()
+		if (this.pixelSorter) this.pixelSorter.update()
 	}
 }
