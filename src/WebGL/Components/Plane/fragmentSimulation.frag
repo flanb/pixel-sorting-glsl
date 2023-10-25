@@ -1,6 +1,7 @@
 uniform float uIteration; 
 uniform float uThreshold; 
 uniform vec2 uDirection; 
+uniform float uHue;
 
 // Function to calculate grayscale from an RGB color
 float gscale (vec3 c) {
@@ -94,6 +95,6 @@ void main() {
     }
 
     vec3 sortedColorHSL = rgb2hsl(gl_FragColor.rgb);
-    sortedColorHSL.x = 1.0 / 2.0; // Set hue to green
+    sortedColorHSL.x = 1.0 / uHue; // Set hue to green
     gl_FragColor.rgb = hsl2rgb(sortedColorHSL);
 }
