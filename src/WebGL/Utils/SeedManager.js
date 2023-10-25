@@ -1,4 +1,5 @@
 import EventEmitter from 'utils/EventEmitter.js'
+import hashStringToNumber from 'utils/HashStringToNumber.js'
 
 export default class SeedManager extends EventEmitter {
 	constructor() {
@@ -26,12 +27,10 @@ export default class SeedManager extends EventEmitter {
 	}
 
 	requestSeed() {
-		const response = prompt('Enter a seed')
+		const response = prompt('Enter a seed (preferably 10 digits):')
+		const seed = hashStringToNumber(response, this.seedLength)
 
-		const seed = response.charCodeAt(0)
-		console.log(seed)
-
-		this.setUrlSeed(parseInt(seed, this.seedLength))
+		this.setUrlSeed(seed)
 	}
 
 	setEventListeners() {
