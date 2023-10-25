@@ -62,7 +62,9 @@ export default class Plane {
 	initGPUCompute(image, size, disposePrevious = false) {
 		if (disposePrevious) {
 			this.variableSorted.renderTargets.forEach((rt) => rt.dispose())
+			this.variableSorted.material.dispose()
 			this.textureSorted.dispose()
+			this.gpuCompute.dispose()
 		}
 
 		const initialTextureData = new Float32Array(getImageData(image, size)).map((n) => n / 255)
@@ -136,15 +138,15 @@ export default class Plane {
 	}
 
 	update() {
+		if (!this.variableSorted) return
 		if (this.variableSorted.material.uniforms.uIteration.value >= this.PARAMS.size + this.PARAMS.lastUpdate) return
 
 		this.gpuCompute.compute()
-
 		this.material.uniforms.uTexture.value = this.gpuCompute.getCurrentRenderTarget(this.variableSorted).texture
 
 		this.variableSorted.material.uniforms.uThreshold.value = this.PARAMS.threshold
-		this.variableSorted.material.uniforms.uIteration.value += 1
 		this.variableSorted.material.uniforms.uDirection.value = this.PARAMS.direction
 		this.variableSorted.material.uniforms.uHue.value = this.PARAMS.hue
+		this.variableSorted.material.uniforms.uIteration.value += 1
 	}
 }
