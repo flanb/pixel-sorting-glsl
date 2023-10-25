@@ -16,7 +16,7 @@ export default class Plane {
 		this.seedManager = this.experience.seedManager
 
 		this.PARAMS = {
-			size: 4096,
+			size: 2048,
 			threshold: 0.2,
 			position,
 			image: this.experience.resources.items.testTexture3.image,
@@ -31,7 +31,7 @@ export default class Plane {
 
 		this.initGPUCompute(this.PARAMS.image, this.PARAMS.size)
 		this.seedManager.on('reload', () => {
-			this.initGPUCompute(this.PARAMS.image, this.PARAMS.size, true)
+			this.handleReset
 		})
 
 		if (this.debug.active) this.setDebug()
@@ -88,6 +88,9 @@ export default class Plane {
 	}
 
 	setDebug() {
+		this.debug.ui.addButton({ title: 'Reset', label: '' }).on('click', () => {
+			this.handleReset()
+		})
 		this.debug.ui
 			.addBinding(this.PARAMS, 'image', {
 				label: 'Image',
@@ -126,6 +129,10 @@ export default class Plane {
 				this.PARAMS.lastUpdate = this.variableSorted.material.uniforms.uIteration.value
 			})
 		this.debug.ui.addBinding(this.PARAMS, 'hue', { min: 1, max: 4, step: 0.01 })
+	}
+
+	handleReset() {
+		this.initGPUCompute(this.PARAMS.image, this.PARAMS.size, true)
 	}
 
 	update() {
