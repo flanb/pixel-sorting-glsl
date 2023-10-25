@@ -22,6 +22,7 @@ export default class Plane {
 			position,
 			image: this.experience.resources.items.testTexture3.image,
 			lastUpdate: 0,
+			direction: { x: 1, y: 0 },
 		}
 
 		this.setGeometry()
@@ -77,6 +78,7 @@ export default class Plane {
 
 		this.variableSorted.material.uniforms.uIteration = { value: 0 }
 		this.variableSorted.material.uniforms.uThreshold = { value: this.PARAMS.threshold }
+		this.variableSorted.material.uniforms.uDirection = { value: this.PARAMS.direction }
 
 		if (gpuComputeCompileError !== null) {
 			console.error(gpuComputeCompileError)
@@ -111,6 +113,15 @@ export default class Plane {
 			.on('change', () => {
 				this.PARAMS.lastUpdate = this.variableSorted.material.uniforms.uIteration.value
 			})
+		this.debug.ui
+			.addBinding(this.PARAMS, 'direction', {
+				x: { min: -1, max: 1, step: 1 },
+				y: { min: -1, max: 1, step: 1, inverted: true },
+			})
+			.on('change', () => {
+				this.mesh.position.copy(this.PARAMS.position)
+				this.PARAMS.lastUpdate = this.variableSorted.material.uniforms.uIteration.value
+			})
 	}
 
 	update() {
@@ -122,5 +133,6 @@ export default class Plane {
 
 		this.variableSorted.material.uniforms.uThreshold.value = this.PARAMS.threshold
 		this.variableSorted.material.uniforms.uIteration.value += 1
+		this.variableSorted.material.uniforms.uDirection.value = this.PARAMS.direction
 	}
 }
