@@ -31,7 +31,7 @@ export default class Plane {
 
 		this.initGPUCompute(this.PARAMS.image, this.PARAMS.size)
 		this.seedManager.on('reload', () => {
-			this.handleReset
+			this.handleReset()
 		})
 
 		if (this.debug.active) this.setDebug()
