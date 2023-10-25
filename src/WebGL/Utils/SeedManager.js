@@ -8,7 +8,7 @@ export default class SeedManager extends EventEmitter {
 		this.seedLength = 10
 		this.url = new URL(window.location.href)
 
-		if (!this.getUrlSeed()) this.setUrlSeed(this.getUrlSeed())
+		if (!this.getUrlSeed()) this.setUrlSeed(this.getRandomSeed())
 
 		this.setEventListeners()
 	}
