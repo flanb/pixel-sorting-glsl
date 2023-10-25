@@ -6,8 +6,6 @@ import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
 import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js'
 import getImageData from 'utils/getImageData.js'
 
-import SeedManager from './seed'
-
 export default class Plane {
 	constructor(position = new Vector3(0, 0, 0)) {
 		this.experience = new Experience()
@@ -15,6 +13,7 @@ export default class Plane {
 		this.debug = this.experience.debug
 		this.renderer = this.experience.renderer.instance
 		this.debug = this.experience.debug
+		this.seedManager = this.experience.seedManager
 
 		this.PARAMS = {
 			size: 4096,
@@ -31,11 +30,11 @@ export default class Plane {
 		this.setMesh()
 
 		this.initGPUCompute(this.PARAMS.image, this.PARAMS.size)
+		this.seedManager.on('reload', () => {
+			this.initGPUCompute(this.PARAMS.image, this.PARAMS.size, true)
+		})
 
 		if (this.debug.active) this.setDebug()
-
-		this.seedManager = new SeedManager()
-		console.log(this.seedManager.getSeed())
 	}
 
 	setGeometry() {
