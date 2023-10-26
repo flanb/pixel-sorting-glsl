@@ -1,12 +1,102 @@
 [
-	{
-		"name": "testTexture",
-		"type": "texture",
-		"path": "textures/images/image1.jpg"
-	},
-	{
-		"name": "maskTexture",
-		"type": "texture",
-		"path": "textures/masks/mask1.jpg"
-	}
+  {
+    "name": "image1Texture",
+    "type": "texture",
+    "path": "textures/images/image1.jpg"
+  },
+  {
+    "name": "image2Texture",
+    "type": "texture",
+    "path": "textures/images/image2.jpg"
+  },
+  {
+    "name": "image3Texture",
+    "type": "texture",
+    "path": "textures/images/image3.jpg"
+  },
+  {
+    "name": "image4Texture",
+    "type": "texture",
+    "path": "textures/images/image4.jpg"
+  },
+  {
+    "name": "image5Texture",
+    "type": "texture",
+    "path": "textures/images/image5.jpg"
+  },
+  {
+    "name": "image6Texture",
+    "type": "texture",
+    "path": "textures/images/image6.jpg"
+  },
+  {
+    "name": "image7Texture",
+    "type": "texture",
+    "path": "textures/images/image7.jpg"
+  },
+  {
+    "name": "image8Texture",
+    "type": "texture",
+    "path": "textures/images/image8.jpg"
+  },
+  {
+    "name": "image9Texture",
+    "type": "texture",
+    "path": "textures/images/image9.jpg"
+  },
+  {
+    "name": "image10Texture",
+    "type": "texture",
+    "path": "textures/images/image10.jpg"
+  },
+  {
+    "name": "maskTexture",
+    "type": "texture",
+    "path": "textures/masks/mask1.jpg"
+  },
+  {
+    "name": "mask2Texture",
+    "type": "texture",
+    "path": "textures/masks/mask2.jpg"
+  },
+  {
+    "name": "mask3Texture",
+    "type": "texture",
+    "path": "textures/masks/mask3.jpg"
+  },
+  {
+    "name": "mask4Texture",
+    "type": "texture",
+    "path": "textures/masks/mask4.jpg"
+  },
+  {
+    "name": "mask5Texture",
+    "type": "texture",
+    "path": "textures/masks/mask5.jpg"
+  },
+  {
+    "name": "mask6Texture",
+    "type": "texture",
+    "path": "textures/masks/mask6.jpg"
+  },
+  {
+    "name": "mask7Texture",
+    "type": "texture",
+    "path": "textures/masks/mask7.jpg"
+  },
+  {
+    "name": "mask8Texture",
+    "type": "texture",
+    "path": "textures/masks/mask8.jpg"
+  },
+  {
+    "name": "mask9Texture",
+    "type": "texture",
+    "path": "textures/masks/mask9.jpg"
+  },
+  {
+    "name": "mask10Texture",
+    "type": "texture",
+    "path": "textures/masks/mask10.jpg"
+  }
 ]
