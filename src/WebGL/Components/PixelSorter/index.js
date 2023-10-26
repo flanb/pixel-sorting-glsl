@@ -5,19 +5,20 @@ import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
 import initDebug from './PixelSorter.debug.js'
 import { PARAMS, state } from './PixelSorter.state.js'
 import initGPUCompute from 'components/PixelSorter/PixelSorter.fbo.js'
-import { easeOut } from 'utils/Ease.js'
+import { power4In } from 'utils/Ease.js'
 
 export default class PixelSorter {
 	constructor(position = new Vector3(0, 0, 0)) {
 		this.experience = new Experience()
 		this.scene = this.experience.scene
 		this.seedManager = this.experience.seedManager
+		const seed = this.seedManager.getUrlSeed()
 
 		this.position = position
 		this.timeElapsed = 0
 		this.thresholdProgress = 0
-		this.thresholdProgressMaxDuration = 5000
-		const seed = this.seedManager.getUrlSeed()
+		this.thresholdMin = 0.15 - (seed % 10) * 0.01
+		this.thresholdProgressMaxDuration = 5000 + (seed % 10) * 1000
 		PARAMS.image = this.experience.resources.items[`image${(seed % 10) + 1}Texture`].image
 		PARAMS.mask = this.experience.resources.items[`mask${(seed ** 2 % 10) + 1}Texture`]
 
@@ -35,6 +36,8 @@ export default class PixelSorter {
 
 			PARAMS.image = this.experience.resources.items[`image${(seed % 10) + 1}Texture`].image
 			PARAMS.mask = this.experience.resources.items[`mask${(seed ** 2 % 10) + 1}Texture`]
+			this.thresholdProgressMaxDuration = 1000 + (seed % 10) * 1000
+			this.thresholdMin = 0.15 - (seed % 10) * 0.01
 
 			//DirectionSeed
 			const x = (seed % 3) - 1
@@ -71,7 +74,6 @@ export default class PixelSorter {
 
 	update() {
 		if (!state.variableSorted) return
-		if (state.variableSorted.material.uniforms.uIteration.value >= PARAMS.size + state.lastUpdate) return
 
 		state.gpuCompute.compute()
 		const { uTexture } = state.material.uniforms
@@ -82,7 +84,7 @@ export default class PixelSorter {
 		if (this.experience.time.delta < 100) this.timeElapsed += this.experience.time.delta
 		this.thresholdProgress = this.timeElapsed / this.thresholdProgressMaxDuration
 		if (this.thresholdProgress < 1) {
-			PARAMS.threshold = 1 - easeOut(this.thresholdProgress)
+			PARAMS.threshold = power4In(1 - this.thresholdProgress) * (1 - this.thresholdMin) + this.thresholdMin
 			this.experience.debug.ui.refresh()
 		}
 
