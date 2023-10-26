@@ -69,5 +69,5 @@ void main() {
     gl_FragColor = texture2D(uTexture, uv);
     vec3 sortedColorHSL = rgb2hsl(gl_FragColor.rgb);
     sortedColorHSL.x = uHue;
-    gl_FragColor.rgb = hsl2rgb(sortedColorHSL);
+//    gl_FragColor.rgb = hsl2rgb(sortedColorHSL);
 }
