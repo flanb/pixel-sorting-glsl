@@ -29,11 +29,9 @@ export default class PixelSorter {
 		initDebug()
 
 		this.seedManager.on('reload', () => {
-			initGPUCompute(PARAMS.image, PARAMS.size, true)
 			this.timeElapsed = 0
 
 			const seed = this.seedManager.getUrlSeed()
-
 			PARAMS.image = this.experience.resources.items[`image${(seed % 10) + 1}Texture`].image
 			PARAMS.mask = this.experience.resources.items[`mask${(seed ** 2 % 10) + 1}Texture`]
 			this.thresholdProgressMaxDuration = 1000 + (seed % 10) * 1000
@@ -46,6 +44,7 @@ export default class PixelSorter {
 			if (x === 0 && y === 0) PARAMS.direction = { x: 1, y: 0 }
 			if (!(x === 0 || y === 0)) PARAMS.direction = { x: 0, y: 1 }
 
+			initGPUCompute(PARAMS.image, PARAMS.size, true)
 			if (this.experience.debug.active) this.experience.debug.ui.refresh()
 		})
 	}
