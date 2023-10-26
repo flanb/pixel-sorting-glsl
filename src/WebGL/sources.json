@@ -2,21 +2,11 @@
 	{
 		"name": "testTexture",
 		"type": "texture",
-		"path": "textures/test.jpg"
-	},
-	{
-		"name": "testTexture2",
-		"type": "texture",
-		"path": "textures/test2.jpg"
-	},
-	{
-		"name": "testTexture3",
-		"type": "texture",
-		"path": "textures/test3.jpg"
+		"path": "textures/images/image1.jpg"
 	},
 	{
 		"name": "maskTexture",
 		"type": "texture",
-		"path": "textures/circle-mask.jpg"
+		"path": "textures/masks/mask1.jpg"
 	}
 ]

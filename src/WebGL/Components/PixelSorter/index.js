@@ -13,7 +13,7 @@ export default class PixelSorter {
 		this.seedManager = this.experience.seedManager
 
 		this.position = position
-		PARAMS.image = this.experience.resources.items.testTexture3.image
+		PARAMS.image = this.experience.resources.items.testTexture.image
 		PARAMS.mask = this.experience.resources.items.maskTexture
 
 		this.setGeometry()
@@ -40,6 +40,7 @@ export default class PixelSorter {
 			const y = (Math.floor(directionSeed / 3) % 3) - 1
 			PARAMS.direction = { x, y }
 			if (x === 0 && y === 0) PARAMS.direction = { x: 1, y: 0 }
+			if (!(x === 0 || y === 0)) PARAMS.direction = { x: 0, y: 1 }
 
 			//ThresholdSeed
 			const thresholdSeed = Number(seed.slice(-3, -2))
