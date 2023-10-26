@@ -17,8 +17,9 @@ export default class PixelSorter {
 		this.timeElapsed = 0
 		this.thresholdProgress = 0
 		this.thresholdProgressMaxDuration = 5000
-		PARAMS.image = this.experience.resources.items.image1Texture.image
-		PARAMS.mask = this.experience.resources.items.mask1Texture
+		const seed = this.seedManager.getUrlSeed()
+		PARAMS.image = this.experience.resources.items[`image${(seed % 10) + 1}Texture`].image
+		PARAMS.mask = this.experience.resources.items[`mask${(seed ** 2 % 10) + 1}Texture`]
 
 		this.setGeometry()
 		this.setMaterial()
@@ -31,6 +32,9 @@ export default class PixelSorter {
 			this.timeElapsed = 0
 
 			const seed = this.seedManager.getUrlSeed()
+
+			PARAMS.image = this.experience.resources.items[`image${(seed % 10) + 1}Texture`].image
+			PARAMS.mask = this.experience.resources.items[`mask${(seed ** 2 % 10) + 1}Texture`]
 
 			//DirectionSeed
 			const x = (seed % 3) - 1
@@ -75,7 +79,7 @@ export default class PixelSorter {
 
 		const { uThreshold, uDirection, uIteration } = state.variableSorted.material.uniforms
 
-		if (this.experience.time.delta < 30) this.timeElapsed += this.experience.time.delta
+		if (this.experience.time.delta < 100) this.timeElapsed += this.experience.time.delta
 		this.thresholdProgress = this.timeElapsed / this.thresholdProgressMaxDuration
 		if (this.thresholdProgress < 1) {
 			PARAMS.threshold = 1 - easeOut(this.thresholdProgress)
