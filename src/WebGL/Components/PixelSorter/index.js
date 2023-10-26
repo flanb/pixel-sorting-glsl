@@ -15,8 +15,11 @@ export default class PixelSorter {
 
 		this.position = position
 		this.timeElapsed = 0
-		PARAMS.image = this.experience.resources.items.image1Texture.image
-		PARAMS.mask = this.experience.resources.items.mask1Texture
+		this.thresholdProgress = 0
+		this.thresholdProgressMaxDuration = 5000
+		const seed = this.seedManager.getUrlSeed()
+		PARAMS.image = this.experience.resources.items[`image${(seed % 10) + 1}Texture`].image
+		PARAMS.mask = this.experience.resources.items[`mask${(seed ** 2 % 10) + 1}Texture`]
 
 		this.setGeometry()
 		this.setMaterial()
@@ -26,8 +29,12 @@ export default class PixelSorter {
 
 		this.seedManager.on('reload', () => {
 			initGPUCompute(PARAMS.image, PARAMS.size, true)
+			this.timeElapsed = 0
 
-			const seed = this.seedManager.getUrlSeed().toString()
+			const seed = this.seedManager.getUrlSeed()
+
+			PARAMS.image = this.experience.resources.items[`image${(seed % 10) + 1}Texture`].image
+			PARAMS.mask = this.experience.resources.items[`mask${(seed ** 2 % 10) + 1}Texture`]
 
 			//DirectionSeed
 			const x = (seed % 3) - 1
@@ -51,7 +58,6 @@ export default class PixelSorter {
 			uniforms: {
 				uTexture: { value: null },
 				uTextureRatio: { value: PARAMS.image.width / PARAMS.image.height },
-				uHue: { value: PARAMS.hue },
 			},
 		})
 	}
@@ -68,27 +74,19 @@ export default class PixelSorter {
 		if (state.variableSorted.material.uniforms.uIteration.value >= PARAMS.size + state.lastUpdate) return
 
 		state.gpuCompute.compute()
-		const { uTexture, uHue } = state.material.uniforms
+		const { uTexture } = state.material.uniforms
 		uTexture.value = state.gpuCompute.getCurrentRenderTarget(state.variableSorted).texture
 
 		const { uThreshold, uDirection, uIteration } = state.variableSorted.material.uniforms
 
-		const maxDuration = 5000
-		const initialValue = 1
-
-		if (uThreshold.value >= 0) {
-			this.timeElapsed += this.experience.time.delta
-			let progress = this.timeElapsed / maxDuration // Calculate progress as a percentage (0 to 1)
-
-			if (progress > 1) progress = 1 // Cap progress to 1
-
-			const easedProgress = easeOut(progress)
-			PARAMS.threshold = initialValue - initialValue * easedProgress // Assuming we're reducing from initialValue to 0
-			uThreshold.value = PARAMS.threshold
-
+		if (this.experience.time.delta < 100) this.timeElapsed += this.experience.time.delta
+		this.thresholdProgress = this.timeElapsed / this.thresholdProgressMaxDuration
+		if (this.thresholdProgress < 1) {
+			PARAMS.threshold = 1 - easeOut(this.thresholdProgress)
 			this.experience.debug.ui.refresh()
 		}
 
+		uThreshold.value = PARAMS.threshold
 		uDirection.value = PARAMS.direction
 		uIteration.value += 1
 	}
