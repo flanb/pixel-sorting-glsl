@@ -75,7 +75,7 @@ export default class PixelSorter {
 
 		const { uThreshold, uDirection, uIteration } = state.variableSorted.material.uniforms
 
-		this.timeElapsed += this.experience.time.delta
+		if (this.experience.time.delta < 30) this.timeElapsed += this.experience.time.delta
 		this.thresholdProgress = this.timeElapsed / this.thresholdProgressMaxDuration
 		if (this.thresholdProgress < 1) {
 			PARAMS.threshold = 1 - easeOut(this.thresholdProgress)
