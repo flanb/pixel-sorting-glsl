@@ -79,7 +79,6 @@ export default class PixelSorter {
 		if (uThreshold.value >= 0) {
 			this.timeElapsed += this.experience.time.delta
 			let progress = this.timeElapsed / maxDuration // Calculate progress as a percentage (0 to 1)
-			console.log(this.timeElapsed)
 
 			if (progress > 1) progress = 1 // Cap progress to 1
 
