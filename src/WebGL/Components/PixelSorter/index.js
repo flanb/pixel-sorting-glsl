@@ -29,13 +29,6 @@ export default class PixelSorter {
 
 			const seed = this.seedManager.getUrlSeed().toString()
 
-			//HueSeed
-			let hueSeed = Number(seed.slice(1, 3))
-			hueSeed = String(hueSeed).padStart(2, '0')
-
-			PARAMS.hue = hueSeed / 100
-			state.material.uniforms.uHue.value = PARAMS.hue
-
 			//DirectionSeed
 			const directionSeed = Number(seed.slice(-2, -1))
 			const x = (directionSeed % 3) - 1
@@ -43,10 +36,6 @@ export default class PixelSorter {
 			PARAMS.direction = { x, y }
 			if (x === 0 && y === 0) PARAMS.direction = { x: 1, y: 0 }
 			if (!(x === 0 || y === 0)) PARAMS.direction = { x: 0, y: 1 }
-
-			//ThresholdSeed
-			const thresholdSeed = Number(seed.slice(-3, -2))
-			PARAMS.threshold = thresholdSeed / 10
 
 			this.experience.debug.ui.refresh()
 		})

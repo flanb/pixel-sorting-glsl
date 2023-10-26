@@ -9,9 +9,8 @@ export const state = {
 
 export const PARAMS = {
 	size: 2048,
-	threshold: 0.2,
+	threshold: 1,
 	image: null,
 	mask: null,
 	direction: { x: 1, y: 0 },
-	hue: 1,
 }
