@@ -15,8 +15,8 @@ export default class PixelSorter {
 
 		this.position = position
 		this.timeElapsed = 0
-		PARAMS.image = this.experience.resources.items.testTexture.image
-		PARAMS.mask = this.experience.resources.items.maskTexture
+		PARAMS.image = this.experience.resources.items.image1Texture.image
+		PARAMS.mask = this.experience.resources.items.mask1Texture
 
 		this.setGeometry()
 		this.setMaterial()
@@ -30,9 +30,8 @@ export default class PixelSorter {
 			const seed = this.seedManager.getUrlSeed().toString()
 
 			//DirectionSeed
-			const directionSeed = Number(seed.slice(-2, -1))
-			const x = (directionSeed % 3) - 1
-			const y = (Math.floor(directionSeed / 3) % 3) - 1
+			const x = (seed % 3) - 1
+			const y = (Math.floor(seed / 3) % 3) - 1
 			PARAMS.direction = { x, y }
 			if (x === 0 && y === 0) PARAMS.direction = { x: 1, y: 0 }
 			if (!(x === 0 || y === 0)) PARAMS.direction = { x: 0, y: 1 }

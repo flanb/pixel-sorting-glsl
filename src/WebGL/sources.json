@@ -50,7 +50,7 @@
     "path": "textures/images/image10.jpg"
   },
   {
-    "name": "maskTexture",
+    "name": "mask1Texture",
     "type": "texture",
     "path": "textures/masks/mask1.jpg"
   },
