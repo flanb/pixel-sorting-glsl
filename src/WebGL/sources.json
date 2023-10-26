@@ -13,5 +13,10 @@
 		"name": "testTexture3",
 		"type": "texture",
 		"path": "textures/test3.jpg"
+	},
+	{
+		"name": "maskTexture",
+		"type": "texture",
+		"path": "textures/circle-mask.jpg"
 	}
 ]

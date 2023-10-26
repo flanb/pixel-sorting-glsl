@@ -31,6 +31,7 @@ export default function initGPUCompute(image, size, disposePrevious = false) {
 	state.variableSorted.material.uniforms.uThreshold = { value: PARAMS.threshold }
 	state.variableSorted.material.uniforms.uDirection = { value: PARAMS.direction }
 	state.variableSorted.material.uniforms.uHue = { value: PARAMS.hue }
+	if (PARAMS.mask !== null) state.variableSorted.material.uniforms.uMaskTexture = { value: PARAMS.mask }
 
 	if (gpuComputeCompileError !== null) {
 		console.error(gpuComputeCompileError)
