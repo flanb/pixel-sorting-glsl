@@ -11,6 +11,7 @@ export const PARAMS = {
 	size: 2048,
 	threshold: 0.2,
 	image: null,
+	mask: null,
 	direction: { x: 1, y: 0 },
 	hue: 1,
 }

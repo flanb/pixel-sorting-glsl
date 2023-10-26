@@ -14,6 +14,7 @@ export default class PixelSorter {
 
 		this.position = position
 		PARAMS.image = this.experience.resources.items.testTexture3.image
+		PARAMS.mask = this.experience.resources.items.maskTexture
 
 		this.setGeometry()
 		this.setMaterial()
