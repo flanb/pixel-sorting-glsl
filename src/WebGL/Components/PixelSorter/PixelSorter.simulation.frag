@@ -13,11 +13,21 @@ void main() {
     vec2 coord = gl_FragCoord.xy;
     vec2 uv = coord / resolution.xy;
     vec4 maskColor = texture2D(uMaskTexture, uv);
+    float maskValue = gscale(maskColor.rgb);
 
     vec2 direction = uDirection;
-    // If the mask color is white, direction is horizontal, x is y and y is x
     vec2 swapped = vec2(direction.y, direction.x);
-    direction = mix(direction, swapped, step(0.5, gscale(maskColor.rgb)));
+    // If the direction x == direction y add -1 to the direction x
+//    if (swapped.x == swapped.y) {
+//        //if swapped.x == -1 then swapped.x +=2 else if swapped.x == 1 then swapped.x -=2
+//        if (swapped.x == -1.) {
+//            swapped.x += 2.;
+//        } else if (swapped.x == 1.) {
+//            swapped.x -= 2.;
+//        }
+//    }
+
+    direction = mix(direction, swapped, step(0.5, maskValue));
 
     float coordAxis = direction.x == 0. ? coord.y : coord.x;
     bool checkPrevious = mod(coordAxis + uIteration, 2.0) < 1.0;// Check whether to compare with the previous frame
@@ -30,6 +40,8 @@ void main() {
     float gReference = gscale(referenceTexture.rgb);
 
     float floorThreshold = floor(uThreshold * 100.) / 100.;
+
+    floorThreshold *= 1. - maskValue;
 
     if (checkPrevious) {
         // If the grayscale value of the current pixel is above the uThreshold and the grayscale value of the adjacent pixel is higher,
