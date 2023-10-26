@@ -23,6 +23,28 @@ export default class PixelSorter {
 
 		this.seedManager.on('reload', () => {
 			initGPUCompute(PARAMS.image, PARAMS.size, true)
+
+			const seed = this.seedManager.getUrlSeed().toString()
+
+			//HueSeed
+			let hueSeed = Number(seed.slice(1, 3))
+			hueSeed = String(hueSeed).padStart(2, '0')
+
+			PARAMS.hue = hueSeed / 100
+			state.material.uniforms.uHue.value = PARAMS.hue
+
+			//DirectionSeed
+			const directionSeed = Number(seed.slice(-2, -1))
+			const x = (directionSeed % 3) - 1
+			const y = (Math.floor(directionSeed / 3) % 3) - 1
+			PARAMS.direction = { x, y }
+			if (x === 0 && y === 0) PARAMS.direction = { x: 1, y: 0 }
+
+			//ThresholdSeed
+			const thresholdSeed = Number(seed.slice(-3, -2))
+			PARAMS.threshold = thresholdSeed / 10
+
+			this.experience.debug.ui.refresh()
 		})
 	}
 
