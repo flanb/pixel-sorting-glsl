@@ -46,7 +46,7 @@ export default class PixelSorter {
 			if (x === 0 && y === 0) PARAMS.direction = { x: 1, y: 0 }
 			if (!(x === 0 || y === 0)) PARAMS.direction = { x: 0, y: 1 }
 
-			this.experience.debug.ui.refresh()
+			if (this.experience.debug.active) this.experience.debug.ui.refresh()
 		})
 	}
 
@@ -85,7 +85,7 @@ export default class PixelSorter {
 		this.thresholdProgress = this.timeElapsed / this.thresholdProgressMaxDuration
 		if (this.thresholdProgress < 1) {
 			PARAMS.threshold = power4In(1 - this.thresholdProgress) * (1 - this.thresholdMin) + this.thresholdMin
-			this.experience.debug.ui.refresh()
+			if (this.experience.debug.active) this.experience.debug.ui.refresh()
 		}
 
 		uThreshold.value = PARAMS.threshold
