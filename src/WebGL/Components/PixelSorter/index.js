@@ -5,6 +5,7 @@ import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
 import initDebug from './PixelSorter.debug.js'
 import { PARAMS, state } from './PixelSorter.state.js'
 import initGPUCompute from 'components/PixelSorter/PixelSorter.fbo.js'
+import { easeOut } from 'utils/Ease.js'
 
 export default class PixelSorter {
 	constructor(position = new Vector3(0, 0, 0)) {
@@ -13,6 +14,7 @@ export default class PixelSorter {
 		this.seedManager = this.experience.seedManager
 
 		this.position = position
+		this.timeElapsed = 0
 		PARAMS.image = this.experience.resources.items.testTexture.image
 		PARAMS.mask = this.experience.resources.items.maskTexture
 
@@ -82,7 +84,24 @@ export default class PixelSorter {
 		uTexture.value = state.gpuCompute.getCurrentRenderTarget(state.variableSorted).texture
 
 		const { uThreshold, uDirection, uIteration } = state.variableSorted.material.uniforms
-		uThreshold.value = PARAMS.threshold
+
+		const maxDuration = 5000
+		const initialValue = 1
+
+		if (uThreshold.value >= 0) {
+			this.timeElapsed += this.experience.time.delta
+			let progress = this.timeElapsed / maxDuration // Calculate progress as a percentage (0 to 1)
+			console.log(this.timeElapsed)
+
+			if (progress > 1) progress = 1 // Cap progress to 1
+
+			const easedProgress = easeOut(progress)
+			PARAMS.threshold = initialValue - initialValue * easedProgress // Assuming we're reducing from initialValue to 0
+			uThreshold.value = PARAMS.threshold
+
+			this.experience.debug.ui.refresh()
+		}
+
 		uDirection.value = PARAMS.direction
 		uIteration.value += 1
 	}
