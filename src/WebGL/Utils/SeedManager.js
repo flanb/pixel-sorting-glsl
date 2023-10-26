@@ -37,11 +37,12 @@ export default class SeedManager extends EventEmitter {
 		addEventListener('keypress', ({ key }) => {
 			if (key.toLowerCase() === 'r') {
 				this.setUrlSeed(this.getRandomSeed())
+				this.trigger('reload')
 			}
 			if (key.toLowerCase() === 's') {
 				this.requestSeed()
+				this.trigger('reload')
 			}
-			this.trigger('reload')
 		})
 	}
 }
