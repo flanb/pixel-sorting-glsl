@@ -1,3 +1,5 @@
+@import './reset.css';
+
 * {
 	margin: 0;
 	padding: 0;
@@ -8,11 +10,55 @@ body {
 	overflow: hidden;
 	font-family: sans-serif;
 	color: white;
+	background-color: black;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	font-size: 0.875rem;
+	line-height: 1.25rem;
 }
 
 #webgl {
-	position: fixed;
+	outline: none;
+}
+
+div.info {
+	position: absolute;
 	top: 0;
 	left: 0;
-	outline: none;
+	padding: 1rem;
+	opacity: 0;
+	animation: fadeIn 2s ease-out 4s forwards;
+}
+
+button {
+	position: absolute;
+	bottom: 1rem;
+	right: 1rem;
+	padding: 0.5rem 1rem;
+
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: calc(0.5rem - 2px);
+
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 0.15s;
+
+	font-weight: 500;
+}
+
+button:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+#download {
+	opacity: 0;
+	animation: fadeIn 2s ease-out 4s forwards;
+}
+
+@keyframes fadeIn {
+	to {
+		opacity: 1;
+	}
 }

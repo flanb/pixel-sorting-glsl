@@ -1,18 +1,23 @@
+import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
+
+import initGPUCompute from 'components/PixelSorter/PixelSorter.fbo.js'
+import { PARAMS, state } from './PixelSorter.state.js'
+import initDebug from './PixelSorter.debug.js'
 import Experience from 'webgl/Experience.js'
+import { power4In } from 'utils/Ease.js'
+
 import fragmentShader from './PixelSorter.frag'
 import vertexShader from './PixelSorter.vert'
-import { Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from 'three'
-import initDebug from './PixelSorter.debug.js'
-import { PARAMS, state } from './PixelSorter.state.js'
-import initGPUCompute from 'components/PixelSorter/PixelSorter.fbo.js'
-import { power4In } from 'utils/Ease.js'
+import InputManager from '@/WebGL/Utils/InputManager.js'
 
 export default class PixelSorter {
 	constructor(position = new Vector3(0, 0, 0)) {
 		this.experience = new Experience()
 		this.scene = this.experience.scene
 		this.seedManager = this.experience.seedManager
+		this.canvas = this.experience.canvas
 		const seed = this.seedManager.getUrlSeed()
+		this.renderer = experience.renderer.instance
 
 		this.position = position
 		this.timeElapsed = 0
@@ -47,6 +52,10 @@ export default class PixelSorter {
 			initGPUCompute(PARAMS.image, PARAMS.size, true)
 			if (this.experience.debug.active) this.experience.debug.ui.refresh()
 		})
+
+		document.getElementById('download').addEventListener('click', () => {
+			this.downloadImage()
+		})
 	}
 
 	setGeometry() {
@@ -71,6 +80,15 @@ export default class PixelSorter {
 		this.scene.add(state.mesh)
 	}
 
+	downloadImage() {
+		if (confirm('Do you want to download the image?')) {
+			const link = document.createElement('a')
+			link.download = 'image.png'
+			link.href = this.canvas.toDataURL('image/png')
+			link.click()
+		}
+	}
+
 	update() {
 		if (!state.variableSorted) return
 
@@ -90,5 +108,7 @@ export default class PixelSorter {
 		uThreshold.value = PARAMS.threshold
 		uDirection.value = PARAMS.direction
 		uIteration.value += 1
+
+		state.lastUpdate = this.experience.time.elapsed
 	}
 }

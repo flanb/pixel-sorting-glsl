@@ -17,6 +17,7 @@ export default class Renderer {
 			canvas: this.canvas,
 			powerPreference: 'high-performance',
 			antialias: false,
+			preserveDrawingBuffer: true,
 		})
 		// this.instance.outputColorSpace = SRGBColorSpace
 		// this.instance.toneMapping = CineonToneMapping

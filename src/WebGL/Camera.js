@@ -1,6 +1,6 @@
 import Experience from './Experience.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { PerspectiveCamera } from 'three'
+import { OrthographicCamera, PerspectiveCamera } from 'three'
 
 export default class Camera {
 	constructor() {
@@ -33,12 +33,7 @@ export default class Camera {
 	}
 
 	setInstance() {
-		this.instance = new PerspectiveCamera(
-			this.options.fov,
-			this.sizes.width / this.sizes.height,
-			this.options.near,
-			this.options.far,
-		)
+		this.instance = new OrthographicCamera(-1.5, 1.5, 1, -1, this.options.near, this.options.far)
 		this.instance.name = 'camera'
 		this.scene.add(this.instance)
 	}
