@@ -5,6 +5,7 @@ import { PARAMS, state } from './PixelSorter.state.js'
 import initDebug from './PixelSorter.debug.js'
 import Experience from 'webgl/Experience.js'
 import { power4In } from 'utils/Ease.js'
+import SoundManager from 'utils/SoundManager.js'
 
 import fragmentShader from './PixelSorter.frag'
 import vertexShader from './PixelSorter.vert'
@@ -34,6 +35,7 @@ export default class PixelSorter {
 		initDebug()
 
 		this.seedManager.on('reload', () => {
+			SoundManager.stop('earthquake')
 			this.timeElapsed = 0
 
 			const seed = this.seedManager.getUrlSeed()
@@ -50,6 +52,7 @@ export default class PixelSorter {
 			if (!(x === 0 || y === 0)) PARAMS.direction = { x: 0, y: 1 }
 
 			initGPUCompute(PARAMS.image, PARAMS.size, true)
+			SoundManager.play('earthquake')
 			if (this.experience.debug.active) this.experience.debug.ui.refresh()
 		})
 
