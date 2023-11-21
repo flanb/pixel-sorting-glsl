@@ -34,7 +34,11 @@ div.info {
 	animation: fadeIn 2s ease-out 4s forwards;
 }
 
-button {
+#download:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+#download {
 	position: absolute;
 	bottom: 1rem;
 	right: 1rem;
@@ -47,13 +51,6 @@ button {
 	transition-duration: 0.15s;
 
 	font-weight: 500;
-}
-
-button:hover {
-	background-color: rgba(255, 255, 255, 0.1);
-}
-
-#download {
 	opacity: 0;
 	animation: fadeIn 2s ease-out 4s forwards;
 }

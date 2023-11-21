@@ -54,7 +54,7 @@ class InputManager extends EventEmitter {
 	setMouseEvents() {
 		addEventListener('mousedown', (event) => {
 			this.trigger('mousedown', [event])
-			SoundManager.play('nature')
+			// SoundManager.play('nature')
 		})
 		addEventListener('mouseup', ({ event }) => {
 			this.trigger('mouseup', [event])

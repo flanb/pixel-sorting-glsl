@@ -52,7 +52,7 @@ export default class PixelSorter {
 			if (!(x === 0 || y === 0)) PARAMS.direction = { x: 0, y: 1 }
 
 			initGPUCompute(PARAMS.image, PARAMS.size, true)
-			SoundManager.play('earthquake')
+			// SoundManager.play('earthquake')
 			if (this.experience.debug.active) this.experience.debug.ui.refresh()
 		})
 
